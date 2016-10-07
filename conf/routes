@@ -9,5 +9,30 @@ GET     /count                      controllers.CountController.count
 # An example controller showing how to write asynchronous code
 GET     /message                    controllers.AsyncController.message
 
+
+### Car-Adverts ######
+# List car
+GET     /cars                       controllers.CarAdvertsController.list
+
+# Add car
+GET     /cars/new                   controllers.CarAdvertsController.create
+POST    /cars                       controllers.CarAdvertsController.save
+
+# Find and Edit existing car
+GET     /cars/:id                   controllers.CarAdvertsController.edit(id:Int)
+POST    /cars/:id                   controllers.CarAdvertsController.update(id:Int)
+
+# Delete a car
+POST    /cars/:id/delete            controllers.CarAdvertsController.delete(id:Long)
+
+######################
+
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+
+
+
+
+
+
