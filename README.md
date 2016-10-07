@@ -50,3 +50,17 @@ Service should:
 If you used GitHub repository, just send us a link to your repository.
 
 If you used local repository, zip it (folder called ".git" in your working directory, it is hidden usually!) and send it us by email or put it on Dropbox and send us a link. 
+
+
+TODOS:
+-  create Scala-Play Template with the activator - done
+-  create local git repository, init, add and push to github (first commit) - done
+-  adapt files build.sbt, plugins.sbt, application.conf, etc. - done
+-  define routes for CRUD RESTful web-service
+-  write car adverts controller to mockup RESTful web-service
+-  write unit-tests to test CRUD RESTful web-service (it is near TDD Test Drive Development)
+-  create model Car with attributes
+-  write DAOs and tables to access the database via slick
+-  configure application.conf to allow CORS requests 
+-  write integration- and acceptance-tests
+-  test and refactoring
