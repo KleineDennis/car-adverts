@@ -10,20 +10,20 @@ GET     /count                      controllers.CountController.count
 GET     /message                    controllers.AsyncController.message
 
 
+
 ### Car-Adverts ######
 # List car
 GET     /cars                       controllers.CarAdvertsController.list
 
 # Add car
-GET     /cars/new                   controllers.CarAdvertsController.create
-POST    /cars                       controllers.CarAdvertsController.save
+POST    /cars                       controllers.CarAdvertsController.create
 
 # Find and Edit existing car
-GET     /cars/:id                   controllers.CarAdvertsController.edit(id:Int)
-POST    /cars/:id                   controllers.CarAdvertsController.update(id:Int)
+GET     /cars/:id                   controllers.CarAdvertsController.find(id:Int)
+PUT     /cars/:id                   controllers.CarAdvertsController.update(id:Int)
 
-# Delete a car
-POST    /cars/:id/delete            controllers.CarAdvertsController.delete(id:Long)
+# Delete car
+DELETE  /cars/:id                   controllers.CarAdvertsController.delete(id:Int)
 
 ######################
 
@@ -33,6 +33,15 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 
 
+# Create
+# curl --include --request POST --header "Content-type: application/json" --data '{"id":101, "title":"Skoda"}' http://localhost:9000/cars
 
+# Read
+# curl --include --request GET http://localhost:9000/cars
+# curl --include --request GET http://localhost:9000/cars/12
 
+# Update
+# curl --include --request PUT --header "Content-type: application/json" --data '{"id":101, "title":"Skoda Update"}' http://localhost:9000/cars/101
 
+# Delete
+# curl --include --request DELETE  http://localhost:9000/cars/101
