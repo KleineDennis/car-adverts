@@ -2,15 +2,13 @@ package models
 
 import java.util.Date
 
-import scala.collection.immutable.List
 import javax.inject.Inject
 
-import play.api.db.slick.DatabaseConfigProvider
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.Reads
+import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
 
 import scala.concurrent.Future
+
 
 /**
   * Created by denniskleine on 07.10.16.
@@ -34,8 +32,6 @@ case class Car(id: Int,
 object Fuel extends Enumeration {
   val Gasoline = Value("Gasoline")
   val Diesel = Value("Diesel")
-
-  implicit val carReads = Reads.enumNameReads(Fuel)
 }
 
 //object Car {
@@ -95,13 +91,10 @@ object Fuel extends Enumeration {
 //}
 
 
-class CarsDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+class CarsDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
 
-  val dbConfig = dbConfigProvider.get[JdbcProfile]
-  val db = dbConfig.db
-  import dbConfig.driver.api._
+  import driver.api._
   private val cars = TableQuery[CarsTable]
-
 
   def list: Future[List[Car]] =
     db.run(cars.to[List].result)
@@ -109,18 +102,16 @@ class CarsDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) 
   def findById(id: Int): Future[Option[Car]] =
     db.run(cars.filter(_.id === id).result.headOption)
 
-  def create(car: Car): Future[Unit] = {
-    db.run(cars += car).map(_ => ())
+  def create(car: Car): Future[Int] =
+    db.run(cars returning cars.map(_.id) += car)
+//    db.run(cars.insertOrUpdate(car))
+
+  def update(id: Int, car: Car): Future[Int] = {
+    db.run(cars.filter(_.id === id).update(car))
   }
 
-//    db.run(cars.insertOrUpdate(car)).map(_ => ())
-
-  def update(id: Int, car: Car): Future[Unit] = {
-    db.run(cars.filter(_.id === id).update(car)).map(_ => ())
-  }
-
-  def delete(id: Int): Future[Unit] =
-    db.run(cars.filter(_.id === id).delete).map(_ => ())
+  def delete(id: Int): Future[Int] =
+    db.run(cars.filter(_.id === id).delete)
 
 
   private class CarsTable(tag: Tag) extends Table[Car](tag, "CAR") {
@@ -136,7 +127,7 @@ class CarsDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) 
     def mileage = column[Option[Int]]("MILEAGE")
     def firstRegistration = column[Option[Date]]("FIRST_REGISTRATION")
 
-    def * = (id, title, fuel, price, newCar, mileage, firstRegistration) <> (Car.tupled, Car.unapply _)
+    def * = (id, title, fuel, price, newCar, mileage, firstRegistration) <> (Car.tupled, Car.unapply)
   }
 
 }
