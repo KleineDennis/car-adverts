@@ -59,15 +59,21 @@ TODOS:
 -  define routes for CRUD RESTful web-service - done
 -  create model Car with attributes - done
 -  write car adverts controller to mockup RESTful web-service - done
--  write unit-tests to test CRUD RESTful web-service (it is near TDD Test Drive Development) - 
--  write DAOs and tables to access the database via slick - 
+-  write unit-tests to test CRUD RESTful web-service (it is near TDD Test Drive Development) - done
+-  write DAOs and tables to access the database via slick - done
 -  configure application.conf to allow CORS requests 
 -  write integration- and acceptance-tests
--  test and refactoring (/v1/ http://developer.lightbend.com/guides/play-rest-api/part-1/index.html)
+-  test and refactoring (e.g. /v1/ http://developer.lightbend.com/guides/play-rest-api/part-1/index.html)
 
-- curl --include --request GET --header "Content-type: application/json"  http://localhost:9000/cars
+
+* Create
+curl --include --request POST --header "Content-type: application/json" --data '{"id":1011,"title":"Audi", "fuel":"Diesel", "price":160000, "newCar":false, "mileage":100000}' http://localhost:9000/cars
+
+* Read
+curl --include --request GET --header "Content-type: application/json"  http://localhost:9000/cars
+
 - curl --include --request GET --header "Content-type: application/json"  http://localhost:9000/cars/1003
-- curl --include --request POST --header "Content-type: application/json"  --data '{"id":1010,"title":"Audi", "fuel":"Diesel", "price":160000, "brandnew":false, "mileage":100000, "registration":1454267212623}' http://localhost:9000/cars
+
 - curl --include --request POST --header "Content-type: application/json"  --data '{"id":1010,"title":"Audi", "fuel":"Diesel", "price":160000, "brandnew":false}' http://localhost:9000/cars
 - curl --include --request PUT --header "Content-type: application/json"  --data '{"id":1010,"title":"Audi", "fuel":"Diesel", "price":0, "brandnew":true, "mileage":100000, "registration":1454267212623}' http://localhost:9000/cars/1010
 - curl --include --request DELETE --header "Content-type: application/json"  http://localhost:9000/cars/1010
