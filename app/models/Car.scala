@@ -1,12 +1,16 @@
 package models
 
 import java.util.Date
+
+import scala.collection.immutable.List
 import javax.inject.Inject
 
 import play.api.db.slick.DatabaseConfigProvider
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.Reads
 import slick.driver.JdbcProfile
 
-import scala.collection.immutable.List
+import scala.concurrent.Future
 
 /**
   * Created by denniskleine on 07.10.16.
@@ -19,52 +23,120 @@ import scala.collection.immutable.List
   * first registration (only for used cars): date without time.
   */
 case class Car(id: Int,
-               title: String //,
-//               fuel: Fuel.Value,
-//               price: Int,
-//               newCar: Boolean,
-//               mileage: Option[Int],
-//               firstRegistration: Option[Date]
+               title: String,
+               fuel: Fuel.Value,
+               price: Int,
+               newCar: Boolean,
+               mileage: Option[Int],
+               firstRegistration: Option[Date]
                )
 
 object Fuel extends Enumeration {
-  val Gasoline, Diesel = Value
+  val Gasoline = Value("Gasoline")
+  val Diesel = Value("Diesel")
+
+  implicit val carReads = Reads.enumNameReads(Fuel)
 }
 
-object Car {
-  var cars: List[Car] = {
-    List(
-      Car(
-        11,
-        "Audi"
-      ),
-      Car(
-        12,
-        "BMW"
-      )
-    )
+//object Car {
+//
+//  implicit object DateFormat extends Format[java.util.Date] {
+//    val format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+//    def reads(json: JsValue): Date = format.parse(json.as[String])
+//    def writes(date: Date) = JsString(format.format(date))
+//  }
+//
+//
+//
+//  //  var cars: List[Car] = {
+////    List(
+////      Car(
+////        11,
+////        "Audi",
+////        Fuel.Diesel,
+////        50000,
+////        true,
+////        null,
+////        null
+////      ),
+////      Car(
+////        12,
+////        "BMW",
+////        Fuel.Gasoline,
+////        50000,
+////        false,
+////        Some(100000),
+////        Some(new Date)
+////      )
+////    )
+////  }
+////
+////  def list = {
+////    cars
+////  }
+////
+////  def find(id: Int) = {
+////    cars.find(_.id == id)
+////  }
+////
+////  def create(car: Car) = {
+////    cars = cars ++ List(car)
+////  }
+////
+////  def update(id: Int, car: Car) = {
+////    cars = cars.filter(_.id != id)
+////    cars = cars ++ List(car)
+////  }
+////
+////  def delete(id: Int) = {
+////    cars = cars.filter(_.id != id)
+////  }
+//
+//}
+
+
+class CarsDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) {
+
+  val dbConfig = dbConfigProvider.get[JdbcProfile]
+  val db = dbConfig.db
+  import dbConfig.driver.api._
+  private val cars = TableQuery[CarsTable]
+
+
+  def list: Future[List[Car]] =
+    db.run(cars.to[List].result)
+
+  def findById(id: Int): Future[Option[Car]] =
+    db.run(cars.filter(_.id === id).result.headOption)
+
+  def create(car: Car): Future[Unit] = {
+    db.run(cars += car).map(_ => ())
   }
 
-  def list = {
-    cars
+//    db.run(cars.insertOrUpdate(car)).map(_ => ())
+
+  def update(id: Int, car: Car): Future[Unit] = {
+    db.run(cars.filter(_.id === id).update(car)).map(_ => ())
   }
 
-  def find(id: Int) = {
-    cars.find(_.id == id)
-  }
+  def delete(id: Int): Future[Unit] =
+    db.run(cars.filter(_.id === id).delete).map(_ => ())
 
-  def create(car: Car) = {
-    cars = cars ++ List(car)
-  }
 
-  def update(id: Int, car: Car) = {
-    cars = cars.filter(_.id != id)
-    cars = cars ++ List(car)
-  }
+  private class CarsTable(tag: Tag) extends Table[Car](tag, "CAR") {
 
-  def delete(id: Int) = {
-    cars = cars.filter(_.id != id)
+    implicit val fuelColumnType = MappedColumnType.base[Fuel.Value, String](_.toString, string => Fuel.withName(string))
+    implicit val dateColumnType = MappedColumnType.base[Date, Long](d => d.getTime, d => new Date(d))
+
+    def id = column[Int]("ID", O.PrimaryKey)
+    def title = column[String]("TITLE")
+    def fuel = column[Fuel.Value]("FUEL")
+    def price = column[Int]("PRICE")
+    def newCar = column[Boolean]("NEWCAR")
+    def mileage = column[Option[Int]]("MILEAGE")
+    def firstRegistration = column[Option[Date]]("FIRST_REGISTRATION")
+
+    def * = (id, title, fuel, price, newCar, mileage, firstRegistration) <> (Car.tupled, Car.unapply _)
   }
 
 }
-
