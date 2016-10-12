@@ -1,7 +1,6 @@
 package models
 
 import java.util.Date
-
 import javax.inject.Inject
 
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
