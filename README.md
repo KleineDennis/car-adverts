@@ -75,6 +75,8 @@ curl --include --request POST --header "Content-type: application/json" --data '
 curl --include --request GET --header "Content-type: application/json"  http://localhost:9000/cars
 curl --include --request GET --header "Content-type: application/json"  http://localhost:9000/cars/1013
 
-- curl --include --request POST --header "Content-type: application/json"  --data '{"id":1010,"title":"Audi", "fuel":"Diesel", "price":160000, "brandnew":false}' http://localhost:9000/cars
-- curl --include --request PUT --header "Content-type: application/json"  --data '{"id":1010,"title":"Audi", "fuel":"Diesel", "price":0, "brandnew":true, "mileage":100000, "registration":1454267212623}' http://localhost:9000/cars/1010
-- curl --include --request DELETE --header "Content-type: application/json"  http://localhost:9000/cars/1010
+* Update
+curl --include --request PUT --header "Content-type: application/json" --data '{"id":1012,"title":"BMW",  "fuel":"Diesel", "price":160001, "newCar":true,  "mileage":100000, "firstRegistration":"2012-12-12"}' http://localhost:9000/cars/1012
+
+* Delete
+curl --include --request DELETE --header "Content-type: application/json"  http://localhost:9000/cars/1013
