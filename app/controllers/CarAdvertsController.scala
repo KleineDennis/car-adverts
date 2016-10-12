@@ -19,6 +19,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CarAdvertsController @Inject()(carsDao: CarsDAO)(implicit ec: ExecutionContext) extends Controller {
 
+  implicit val fuelReads = Reads.enumNameReads(Fuel)  //Json deserializer for type models.Fuel.Value
+
   implicit val carWrites: Writes[Car] = (
     (JsPath \ "id").write[Int] and
     (JsPath \ "title").write[String] and
@@ -42,7 +44,6 @@ class CarAdvertsController @Inject()(carsDao: CarsDAO)(implicit ec: ExecutionCon
 //  implicit val carReads = Json.reads[Car]
 //  implicit val carWrites = Json.writes[Car]
 //  implicit val carFormat = Json.format[Car]
-  implicit val fuelReads = Reads.enumNameReads(Fuel)  //Json deserializer for type models.Fuel.Value
 
 
   val logger = Logger(this.getClass())
@@ -68,7 +69,7 @@ class CarAdvertsController @Inject()(carsDao: CarsDAO)(implicit ec: ExecutionCon
       },
       car => {
         carsDao.create(car).map( res =>
-          Ok(Json.obj("status" -> "OK", "message" -> ("Car '" + car.title + "with Id " + res + "' saved.") )))
+          Ok(Json.obj("status" -> "OK", "message" -> ("Car '" + car.title + "' with Id " + res + " saved.") )))
       }
     )
   }
@@ -88,8 +89,8 @@ class CarAdvertsController @Inject()(carsDao: CarsDAO)(implicit ec: ExecutionCon
     )
   }
 
-  def delete(id: Int) = Action.async { implicit request =>
-    carsDao.delete(id).map( _ =>
-      Ok(Json.obj("status" ->"OK", "message" -> ("Car with id '" + id + "' deleted.") )))
+  def delete(id: Int) = Action.async {
+    carsDao.delete(id).map( res =>
+      Ok(Json.obj("status" ->"OK", "message" -> (s"$res Car with id '" + id + "' deleted.") )))
   }
 }
