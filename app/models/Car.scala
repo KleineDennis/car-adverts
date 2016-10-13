@@ -33,70 +33,15 @@ object Fuel extends Enumeration {
   val Diesel = Value("Diesel")
 }
 
-//object Car {
-//
-//  implicit object DateFormat extends Format[java.util.Date] {
-//    val format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-//    def reads(json: JsValue): Date = format.parse(json.as[String])
-//    def writes(date: Date) = JsString(format.format(date))
-//  }
-//
-//
-//
-//  //  var cars: List[Car] = {
-////    List(
-////      Car(
-////        11,
-////        "Audi",
-////        Fuel.Diesel,
-////        50000,
-////        true,
-////        null,
-////        null
-////      ),
-////      Car(
-////        12,
-////        "BMW",
-////        Fuel.Gasoline,
-////        50000,
-////        false,
-////        Some(100000),
-////        Some(new Date)
-////      )
-////    )
-////  }
-////
-////  def list = {
-////    cars
-////  }
-////
-////  def find(id: Int) = {
-////    cars.find(_.id == id)
-////  }
-////
-////  def create(car: Car) = {
-////    cars = cars ++ List(car)
-////  }
-////
-////  def update(id: Int, car: Car) = {
-////    cars = cars.filter(_.id != id)
-////    cars = cars ++ List(car)
-////  }
-////
-////  def delete(id: Int) = {
-////    cars = cars.filter(_.id != id)
-////  }
-//
-//}
-
 
 class CarsDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
 
   import driver.api._
   private val cars = TableQuery[CarsTable]
 
-  def list: Future[List[Car]] =
-    db.run(cars.to[List].result)
+  def list(col: Int): Future[List[Car]] =
+    db.run(cars.to[List].sortBy(_.colIdx(col)).result)
+//    db.run(cars.to[List].sortBy(_.title).result)
 
   def findById(id: Int): Future[Option[Car]] =
     db.run(cars.filter(_.id === id).result.headOption)
@@ -127,6 +72,7 @@ class CarsDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) 
     def firstRegistration = column[Option[Date]]("FIRST_REGISTRATION")
 
     def * = (id, title, fuel, price, newCar, mileage, firstRegistration) <> (Car.tupled, Car.unapply)
+    def colIdx = Vector(null, id, price) // index addressable columns
   }
 
 }
