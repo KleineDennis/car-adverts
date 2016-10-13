@@ -61,22 +61,24 @@ TODOS:
 -  write car adverts controller to mockup RESTful web-service - done
 -  write unit-tests to test CRUD RESTful web-service (it is near TDD Test Drive Development) - done
 -  write DAOs and tables to access the database via slick - done
--  configure application.conf to allow CORS requests 
--  write integration- and acceptance-tests
--  test and refactoring (e.g. /v1/ http://developer.lightbend.com/guides/play-rest-api/part-1/index.html)
+-  write optional sorting by any field specified by query parameter - open
+-  validation for required fields and fields only for used cars - open
+-  configure application.conf to allow CORS requests - open
+-  write integration- and acceptance-tests - in progress
+-  test and refactoring (e.g. /v1/ http://developer.lightbend.com/guides/play-rest-api/part-1/index.html) - open
 
 
 * Create
-curl --include --request POST --header "Content-type: application/json" --data '{"id":1011,"title":"Audi", "fuel":"Diesel", "price":160000, "newCar":false, "mileage":100000}' http://localhost:9000/cars
-curl --include --request POST --header "Content-type: application/json" --data '{"id":1012,"title":"BMW",  "fuel":"Diesel", "price":160001, "newCar":true,  "mileage":0, "firstRegistration":"2012-12-12"}' http://localhost:9000/cars
-curl --include --request POST --header "Content-type: application/json" --data '{"id":1013,"title":"BMW",  "fuel":"Benzin", "price":160001, "newCar":true,  "mileage":0}' http://localhost:9000/cars
+- curl --include --request POST --header "Content-type: application/json" --data '{"id":1011,"title":"Audi", "fuel":"Diesel", "price":160000, "newCar":false, "mileage":100000}' http://localhost:9000/cars
+- curl --include --request POST --header "Content-type: application/json" --data '{"id":1012,"title":"BMW",  "fuel":"Diesel", "price":160001, "newCar":true,  "mileage":0, "firstRegistration":"2012-12-12"}' http://localhost:9000/cars
+- curl --include --request POST --header "Content-type: application/json" --data '{"id":1013,"title":"BMW",  "fuel":"Benzin", "price":160001, "newCar":true,  "mileage":0}' http://localhost:9000/cars
 
 * Read
-curl --include --request GET --header "Content-type: application/json"  http://localhost:9000/cars
-curl --include --request GET --header "Content-type: application/json"  http://localhost:9000/cars/1013
+- curl --include --request GET --header "Content-type: application/json"  http://localhost:9000/cars
+- curl --include --request GET --header "Content-type: application/json"  http://localhost:9000/cars/1013
 
 * Update
-curl --include --request PUT --header "Content-type: application/json" --data '{"id":1012,"title":"BMW",  "fuel":"Diesel", "price":160001, "newCar":true,  "mileage":100000, "firstRegistration":"2012-12-12"}' http://localhost:9000/cars/1012
+- curl --include --request PUT --header "Content-type: application/json" --data '{"id":1012,"title":"BMW",  "fuel":"Diesel", "price":160001, "newCar":true,  "mileage":100000, "firstRegistration":"2012-12-12"}' http://localhost:9000/cars/1012
 
 * Delete
-curl --include --request DELETE --header "Content-type: application/json"  http://localhost:9000/cars/1013
+- curl --include --request DELETE --header "Content-type: application/json"  http://localhost:9000/cars/101
