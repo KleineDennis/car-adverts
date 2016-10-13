@@ -61,7 +61,7 @@ TODOS:
 -  write car adverts controller to mockup RESTful web-service - done
 -  write unit-tests to test CRUD RESTful web-service (it is near TDD Test Drive Development) - done
 -  write DAOs and tables to access the database via slick - done
--  write optional sorting by any field specified by query parameter - open
+-  write optional sorting by any field specified by query parameter - done with BUG (column with type String does not work)
 -  validation for required fields and fields only for used cars - open
 -  configure application.conf to allow CORS requests - open
 -  write integration- and acceptance-tests - in progress
@@ -75,6 +75,7 @@ Create
 
 Read
 - curl --include --request GET --header "Content-type: application/json"  http://localhost:9000/cars
+- curl --include --request GET --header "Content-type: application/json"  http://localhost:9000/cars?col=2
 - curl --include --request GET --header "Content-type: application/json"  http://localhost:9000/cars/1013
 
 Update
