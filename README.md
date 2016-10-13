@@ -68,17 +68,17 @@ TODOS:
 -  test and refactoring (e.g. /v1/ http://developer.lightbend.com/guides/play-rest-api/part-1/index.html) - open
 
 
-* Create
+Create
 - curl --include --request POST --header "Content-type: application/json" --data '{"id":1011,"title":"Audi", "fuel":"Diesel", "price":160000, "newCar":false, "mileage":100000}' http://localhost:9000/cars
 - curl --include --request POST --header "Content-type: application/json" --data '{"id":1012,"title":"BMW",  "fuel":"Diesel", "price":160001, "newCar":true,  "mileage":0, "firstRegistration":"2012-12-12"}' http://localhost:9000/cars
 - curl --include --request POST --header "Content-type: application/json" --data '{"id":1013,"title":"BMW",  "fuel":"Benzin", "price":160001, "newCar":true,  "mileage":0}' http://localhost:9000/cars
 
-* Read
+Read
 - curl --include --request GET --header "Content-type: application/json"  http://localhost:9000/cars
 - curl --include --request GET --header "Content-type: application/json"  http://localhost:9000/cars/1013
 
-* Update
+Update
 - curl --include --request PUT --header "Content-type: application/json" --data '{"id":1012,"title":"BMW",  "fuel":"Diesel", "price":160001, "newCar":true,  "mileage":100000, "firstRegistration":"2012-12-12"}' http://localhost:9000/cars/1012
 
-* Delete
+Delete
 - curl --include --request DELETE --header "Content-type: application/json"  http://localhost:9000/cars/101
