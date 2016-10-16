@@ -9,6 +9,7 @@ import play.api.mvc._
 import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
+import play.api.libs.json.Json._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -49,9 +50,10 @@ class CarAdvertsController @Inject()(carsDao: CarsDAO)(implicit ec: ExecutionCon
   val logger = Logger(this.getClass())
 
 
-  def list = Action.async {
-    val car = carsDao.list
-    car.map(cs => Ok(Json.toJson(cs)))
+  def list(col: Int) = Action.async {
+    val car = carsDao.list(col)
+//    car.map(cs => Ok(Json.toJson("status" -> "OK", "data" -> cs, "message" -> "All Car Adverts listed.")))
+    car.map(res => Ok(successResponse(Json.toJson(res), "All Car Adverts listed.")))
   }
 
   def find(id: Int) = Action.async {
@@ -69,12 +71,12 @@ class CarAdvertsController @Inject()(carsDao: CarsDAO)(implicit ec: ExecutionCon
       },
       car => {
         carsDao.create(car).map( res =>
-          Ok(Json.obj("status" -> "OK", "message" -> ("Car '" + car.title + "' with Id " + res + " saved.") )))
+          Ok(Json.obj("status" -> "OK", "message" -> ("Car '" + car.title + "' created.") )))
       }
     )
   }
 
-  def update(id:Int) = Action.async(BodyParsers.parse.json) { implicit request =>
+  def update(id: Int) = Action.async(BodyParsers.parse.json) { implicit request =>
     logger.info("Car Json ===> " + request.body)
     val carResult = request.body.validate[Car]
 
@@ -93,4 +95,11 @@ class CarAdvertsController @Inject()(carsDao: CarsDAO)(implicit ec: ExecutionCon
     carsDao.delete(id).map( res =>
       Ok(Json.obj("status" ->"OK", "message" -> (s"$res Car with id '" + id + "' deleted.") )))
   }
+
+
+
+  private def successResponse(data: JsValue, message: String) = {
+    obj("status" -> "OK", "data" -> data, "message" -> message)
+  }
+
 }
