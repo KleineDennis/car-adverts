@@ -64,7 +64,7 @@ TODOS:
 -  write optional sorting by any field specified by query parameter - done with BUG (column with type String does not work)
 -  validation for required fields and fields only for used cars - open
 -  configure application.conf to allow CORS requests - open
--  write integration- and acceptance-tests - in progress
+-  write integration- and acceptance-tests - done
 -  test and refactoring (e.g. /v1/ http://developer.lightbend.com/guides/play-rest-api/part-1/index.html) - open
 
 
