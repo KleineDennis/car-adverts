@@ -2,18 +2,10 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
-# An example controller showing how to use dependency injection
-GET     /count                      controllers.CountController.count
-# An example controller showing how to write asynchronous code
-GET     /message                    controllers.AsyncController.message
-
-
 
 ### Car-Adverts ######
 # List car
-GET     /cars                       controllers.CarAdvertsController.list
+GET     /cars                       controllers.CarAdvertsController.list(col: Int ?= 1)
 
 # Add car
 POST    /cars                       controllers.CarAdvertsController.create
@@ -31,17 +23,3 @@ DELETE  /cars/:id                   controllers.CarAdvertsController.delete(id:I
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-
-
-# Create
-# curl --include --request POST --header "Content-type: application/json" --data '{"id":101, "title":"Skoda"}' http://localhost:9000/cars
-
-# Read
-# curl --include --request GET http://localhost:9000/cars
-# curl --include --request GET http://localhost:9000/cars/12
-
-# Update
-# curl --include --request PUT --header "Content-type: application/json" --data '{"id":101, "title":"Skoda Update"}' http://localhost:9000/cars/101
-
-# Delete
-# curl --include --request DELETE  http://localhost:9000/cars/101
